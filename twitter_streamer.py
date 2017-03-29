@@ -23,6 +23,7 @@ sid = SentimentIntensityAnalyzer()
 timer = datetime.now() + timedelta(seconds=5)
 neg_sent = 0
 pos_sent = 0
+count = 0
 
 
 class StreamTweets(StreamListener):
@@ -48,6 +49,9 @@ class StreamTweets(StreamListener):
                         pos_sent += sentiment_score[k]
                         sentiment_juicer.tweet_analyse(cleaned_tweet, k)
 
+
+            global count
+            count += 1
             if datetime.now() > timer:
                 #print('5 seconds elapsed'.format(timer))
                 update_timer()
@@ -63,13 +67,14 @@ class StreamTweets(StreamListener):
 
 
 def update_timer():
-    global timer, neg_sent, pos_sent
+    global timer, neg_sent, pos_sent, count
     #print('the positive score was: {0}, the negative score was: {1}'.format(pos_sent,neg_sent))
     timer = datetime.now() + timedelta(seconds=5)
-    pandas_juicer.twitter_sent_build_dict(pos_sent,neg_sent)
+    pandas_juicer.twitter_sent_build_dicts(pos_sent,neg_sent, count)
     neg_sent = 0
     pos_sent = 0
-    return timer, neg_sent, pos_sent
+    count = 0
+    return timer, neg_sent, pos_sent, count
 
 
 twitter_stream = Stream(auth, StreamTweets())
