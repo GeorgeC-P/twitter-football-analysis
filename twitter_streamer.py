@@ -11,10 +11,10 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-from football_sentiment import twitter_connection, sentiment_juicer, pandas_juicer
+from football_sentiment import config, sentiment_juicer, pandas_juicer
 
-auth = OAuthHandler(twitter_connection.key, twitter_connection.secret)
-auth.set_access_token(twitter_connection.token, twitter_connection.token_secret)
+auth = OAuthHandler(config.key, config.secret)
+auth.set_access_token(config.token, config.token_secret)
 api = tweepy.API(auth)
 
 stop_words = set(stopwords.words("english"))
@@ -78,4 +78,4 @@ def update_timer():
 
 
 twitter_stream = Stream(auth, StreamTweets())
-twitter_stream.filter(track=['brexit'])
+twitter_stream.filter(track=['#lcfc', 'leicester'])

@@ -1,4 +1,3 @@
 def tweet_analyse(tweet, sent):
-    #print (tweet)
-    #print (sent)
+    print (tweet, sent)
     return True;

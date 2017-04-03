@@ -1,17 +1,19 @@
 import pandas as pd
-import datetime, time
+import datetime
 import matplotlib.pyplot as plt
 from matplotlib import style
 
-style.use('ggplot')
+from football_sentiment import config
 
-tweets_over_time = {}
+tweets_over_time = []
 volume = {}
 
 
 def twitter_sent_build_dicts(pos_sent, neg_sent, count):
-    tweets_over_time[datetime.datetime.now()] = pos_sent + neg_sent
+    now = datetime.datetime.now()
+    tweets_over_time.append((now, pos_sent, neg_sent, count))
     volume[datetime.datetime.now()] = count
+    multi_graph(tweets_over_time)
     if len(volume) % 10 == 0:
         volume_analyser(volume)
 
@@ -24,16 +26,9 @@ def volume_analyser(volume):
     plt.show()
 
 
-
-
-
-
-    # s = pd.Series(tweets_over_time)
-    # s.index.name='date'
-    # #s.reset_index()
-    # if len(s) > 80:
-    #     s.plot()
-    #     plt.show()
-
-
-
+def multi_graph(tweets_over_time):
+    labels = ['date_time', 'pos_sent', 'neg_sent', 'count']
+    df = pd.DataFrame.from_records(tweets_over_time, columns=labels)
+    df.set_index('date_time', inplace = True)
+    if len(df) > 5:
+        df.iplot(secondary_y=['count'], filename='test_second_y')
